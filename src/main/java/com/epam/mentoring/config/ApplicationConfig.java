@@ -3,37 +3,33 @@ package com.epam.mentoring.config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
-@Component
+@Configuration
 public class ApplicationConfig {
 
     @Bean
     @Profile("dev")
     public DataSource devDataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");
-        dataSourceBuilder.url("jdbc:mysql://localhost:3306/adv_backend");
-        dataSourceBuilder.username("root");
-        dataSourceBuilder.password("root");
-
-        return dataSourceBuilder.build();
+        return DataSourceBuilder.create()
+                .driverClassName("com.mysql.cj.jdbc.Driver")
+                .url("jdbc:mysql://localhost:3306/adv_backend")
+                .username("root")
+                .password("root")
+                .build();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public DataSource qaDataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.h2.Driver");
-        dataSourceBuilder.url("jdbc:h2:mem:test");
-        dataSourceBuilder.username("SA");
-        dataSourceBuilder.password("");
-
-        return dataSourceBuilder.build();
+    public DataSource defaultDataSource() {
+        return DataSourceBuilder.create()
+                .driverClassName("org.h2.Driver")
+                .url("jdbc:h2:mem:test")
+                .username("SA")
+                .password("")
+                .build();
     }
-
-
 }

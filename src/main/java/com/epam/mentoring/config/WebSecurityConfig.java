@@ -2,35 +2,32 @@ package com.epam.mentoring.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
 public class WebSecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/actuator/**").hasRole("ADMIN")
-                        .anyRequest().permitAll())
-                .formLogin(withDefaults())
-                .logout(LogoutConfigurer::permitAll);
-
-        return http.build();
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+                .csrf().disable()
+                .authorizeExchange()
+                .pathMatchers("/", "/login", "/logout").permitAll()
+                .pathMatchers("/v1/**").permitAll()
+                .pathMatchers("/actuator/**").hasRole("ADMIN")
+                .and().formLogin()
+                .and().build();
     }
 
+    @SuppressWarnings("deprecation")
     @Bean
-    public UserDetailsService userDetailsService() {
+    public MapReactiveUserDetailsService userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("user")
                 .password("user")
@@ -43,6 +40,6 @@ public class WebSecurityConfig {
                 .roles("ADMIN")
                 .build();
 
-        return new InMemoryUserDetailsManager(user, admin);
+        return new MapReactiveUserDetailsService(user, admin);
     }
 }
