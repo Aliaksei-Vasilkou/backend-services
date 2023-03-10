@@ -21,7 +21,7 @@ public class WebSecurityConfig {
                 .pathMatchers("/", "/login", "/logout").permitAll()
                 .pathMatchers("/v1/**").permitAll()
                 .pathMatchers("/actuator/**").hasRole("ADMIN")
-                .and().formLogin()
+                .and().httpBasic()
                 .and().build();
     }
 

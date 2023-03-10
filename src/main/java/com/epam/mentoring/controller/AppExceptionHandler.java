@@ -1,21 +1,23 @@
 package com.epam.mentoring.controller;
 
+import com.epam.mentoring.domain.model.ErrorResponse;
 import com.epam.mentoring.exception.UserNotFoundException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class AppExceptionHandler extends ResponseEntityExceptionHandler {
+public class AppExceptionHandler {
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("USER_NOT_FOUND")
+                .message(ex.getMessage())
+                .source("APP_NAME")
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
