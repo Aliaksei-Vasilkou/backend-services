@@ -1,4 +1,3 @@
-target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -30,6 +29,7 @@ target/
 
 ### Maven template
 target/
+/proto/target
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
