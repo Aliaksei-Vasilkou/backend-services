@@ -1,0 +1,23 @@
+{
+  "namespace": "com.epam.mentoring.kafka.avro",
+  "type": "record",
+  "name": "UserRegistrationNotification",
+  "doc": "Avro Schema for UserRegistrationNotification message format",
+  "fields": [
+    {
+      "name": "firstName",
+      "type": "string",
+      "doc": "First Name"
+    },
+    {
+      "name": "lastName",
+      "type": "string",
+      "doc": "Last Name"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "doc": "Email address"
+    }
+  ]
+}
