@@ -1,13 +1,17 @@
 package com.epam.mentoring;
 
-import com.epam.mentoring.grpc.UserRegistration.UserRegistrationRequest;
-import com.epam.mentoring.grpc.UserRegistration.UserRegistrationResponse;
+import com.epam.mentoring.grpc.UserRegistrationRequest;
+import com.epam.mentoring.grpc.UserRegistrationResponse;
 import com.epam.mentoring.grpc.UserRegistrationServiceGrpc;
 import io.grpc.stub.StreamObserver;
 
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserRegistrationClient extends UserRegistrationServiceGrpc.UserRegistrationServiceImplBase {
+
+    private static final Logger LOGGER = Logger.getLogger(UserRegistrationClient.class.getName());
 
     @Override
     public void sendNotification(UserRegistrationRequest request, StreamObserver<UserRegistrationResponse> responseObserver) {
@@ -19,6 +23,6 @@ public class UserRegistrationClient extends UserRegistrationServiceGrpc.UserRegi
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
-        System.out.println("Client response: " + response);
+        LOGGER.log(Level.INFO, "Client response: {}", response);
     }
 }

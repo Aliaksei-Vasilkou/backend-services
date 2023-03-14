@@ -11,6 +11,7 @@
 
     <modules>
         <module>app-client</module>
+        <module>app-common</module>
         <module>app-server</module>
         <module>proto</module>
     </modules>

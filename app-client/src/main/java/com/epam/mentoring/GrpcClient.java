@@ -3,14 +3,31 @@ package com.epam.mentoring;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.epam.mentoring.common.utils.GrpcConstants.SERVER_PORT;
+
 public class GrpcClient {
 
-    public static void main(String[] args) throws Exception {
-        Server server = ServerBuilder.forPort(8100)
+    private static final Logger LOGGER = Logger.getLogger(GrpcClient.class.getName());
+
+    public static void main(String[] args) {
+        Server server = ServerBuilder.forPort(SERVER_PORT)
                 .addService(new UserRegistrationClient())
                 .build();
 
-        server.start();
-        server.awaitTermination();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            LOGGER.log(Level.INFO, "Closing connection");
+            server.shutdown();
+        }));
+
+        try {
+            server.start();
+            LOGGER.log(Level.INFO, "gRPC client has started");
+            server.awaitTermination();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

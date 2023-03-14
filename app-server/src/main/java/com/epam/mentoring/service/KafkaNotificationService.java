@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.Properties;
 import java.util.UUID;
 
+import static com.epam.mentoring.common.utils.KafkaConstants.BOOTSTRAP_SERVER_LOCATION;
+import static com.epam.mentoring.common.utils.KafkaConstants.SCHEMA_REGISTRY_LOCATION;
+import static com.epam.mentoring.common.utils.KafkaConstants.TOPIC_NAME;
 import static org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
@@ -21,15 +24,14 @@ import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_
 @Service
 public class KafkaNotificationService {
 
-    private static final String TOPIC_NAME = "user-registration-topic";
     private final KafkaProducer<String, UserRegistrationNotification> kafkaProducer;
 
     public KafkaNotificationService() {
         Properties properties = new Properties();
-        properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER_LOCATION);
         properties.setProperty(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
-        properties.setProperty("schema.registry.url", "http://localhost:8081");
+        properties.setProperty("schema.registry.url", SCHEMA_REGISTRY_LOCATION);
 
         this.kafkaProducer = new KafkaProducer<>(properties);
     }
